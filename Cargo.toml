@@ -2,4 +2,5 @@
 
 members = [
         "projects/06_assembler/assembler",
+        "projects/07_vm_i_stack_arithmetic/vm_i",
 ]
