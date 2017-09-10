@@ -7,3 +7,4 @@ tmp/
 **/*.out
 
 /target
+/projects/09_high_level_language/**/*.vm

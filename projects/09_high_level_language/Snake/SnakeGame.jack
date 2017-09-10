@@ -1,0 +1,174 @@
+class SnakeGame {
+    field Snake snake;
+    field SnakeGrid grid;
+    field int score;
+    field int level;
+    field boolean paused;
+    field int cycle;
+    field int delay;
+    constructor SnakeGame new() {
+        do Random.setSeed(RandSeed.getSeed());
+
+        let score = 0;
+        let level = 1;
+        let paused = false;
+        let cycle = 0;
+        let delay = 100;
+
+        let grid = SnakeGrid.new(this, 512, 256);
+        let snake = Snake.new(this, grid.sizeX() / 2, grid.sizeY() / 2, 10, 3);
+
+        do grid.placeFood();
+        do grid.drawStatus();
+
+        return this;
+    }
+
+    method void dispose() {
+        do snake.dispose();
+        do grid.dispose();
+        do Memory.deAlloc(this);
+
+        return;
+    }
+
+    method void run() {
+        var boolean broken;
+        var boolean exit;
+        var int key;
+
+        let exit = false;
+        while(~exit) {
+            do snake.rememberDir();
+            if( paused ) {
+                let broken = false;
+                while(~broken) {
+                    let key = 0;
+                    while(~key) {
+                        let key = Keyboard.keyPressed();
+                    }
+                    if( key = 80 ) {
+                        // p
+                        let broken = true;
+                        let paused = false;
+                    }
+                    if( key = 81 ) {
+                        // q
+                        let broken = true;
+                        let exit = true;
+                    }
+                    do grid.drawStatus();
+                    do Sys.wait(delay);
+                }
+            }
+
+            let key = Keyboard.keyPressed();
+            if( key = 80 ) {
+                let paused = true;
+            }
+            if( key = 81 ) {
+                let exit = true;
+            }
+            if( key = 130 ) {
+                if( snake.getLastDir() = 1 ) {
+                    do snake.setDir(3);
+                }
+                if( snake.getLastDir() = 2 ) {
+                    do snake.setDir(3);
+                }
+            }
+            if( key = 131 ) {
+                if( snake.getLastDir() = 3 ) {
+                    do snake.setDir(1);
+                }
+                if( snake.getLastDir() = 4 ) {
+                    do snake.setDir(1);
+                }
+            }
+            if( key = 132 ) {
+                if( snake.getLastDir() = 1 ) {
+                    do snake.setDir(4);
+                }
+                if( snake.getLastDir() = 2 ) {
+                    do snake.setDir(4);
+                }
+            }
+            if( key = 133 ) {
+                if( snake.getLastDir() = 3 ) {
+                    do snake.setDir(2);
+                }
+                if( snake.getLastDir() = 4 ) {
+                    do snake.setDir(2);
+                }
+            }
+
+            if( ~ snake.tryMove() ) {
+                do grid.drawCrashed();
+                do Sys.halt();
+            }
+
+            if( grid.checkFood(snake.posX(), snake.posY()) ) {
+                do snake.eatFood();
+                do nextLevel();
+                do grid.placeFood();
+            }
+
+            do snake.grow(cycle);
+
+            do grid.drawFood();
+            do grid.drawStatus();
+            do Sys.wait(delay);
+            do nextCycle();
+
+            if( snake.checkRewriteHistory() ) {
+                let cycle = snake.getLength();
+            }
+
+        }
+
+        do grid.drawDone();
+        do Sys.halt();
+
+        return;
+    }
+
+    method void nextLevel() {
+        let score = score + (10 * level);
+        let level = level + 1;
+
+        if( delay > 30 ) {
+            let delay = delay - 5;
+        }
+
+        return;
+    }
+
+    method int nextCycle() {
+        let cycle = cycle + 1;
+        return cycle;
+    }
+
+    method SnakeGrid getGrid() {
+        return grid;
+    }
+
+    method Snake getSnake() {
+        return snake;
+    }
+
+    method int getCycle() {
+        return cycle;
+    }
+
+    method int getScore() {
+        return score;
+    }
+
+    method int getLevel() {
+        return level;
+    }
+
+    method int getPaused() {
+        return paused;
+    }
+}
