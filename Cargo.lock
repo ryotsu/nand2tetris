@@ -60,6 +60,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "compiler_ii"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "tempfile",
+ "xml_writer",
+]
+
+[[package]]
 name = "fuchsia-cprng"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
