@@ -8,3 +8,5 @@ tmp/
 
 /target
 /projects/09_high_level_language/**/*.vm
+/projects/11_compiler_ii_code_generation/**/*.vm
+/projects/12_operating_system/**/*.vm

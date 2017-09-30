@@ -15,12 +15,43 @@
  * as a small filled square, indicates where the next character will be displayed.
  */
 class Output {
+    static Array twoExp;
+    static int x, y;
+    static int fontX, fontY;
+    static int maxX, maxY;
 
     // Character map for displaying characters
     static Array charMaps; 
 
     /** Initializes the screen, and locates the cursor at the screen's top-left. */
     function void init() {
+        let x = 0;
+        let y = 0;
+        let fontX = 8;
+        let fontY = 11;
+        let maxX = 64;
+        let maxY = 23;
+
+        let twoExp = Array.new(16);
+        let twoExp[0] = 1;
+        let twoExp[1] = 2;
+        let twoExp[2] = 4;
+        let twoExp[3] = 8;
+        let twoExp[4] = 16;
+        let twoExp[5] = 32;
+        let twoExp[6] = 64;
+        let twoExp[7] = 128;
+        let twoExp[8] = 256;
+        let twoExp[9] = 512;
+        let twoExp[10] = 1024;
+        let twoExp[11] = 2048;
+        let twoExp[12] = 4096;
+        let twoExp[13] = 8192;
+        let twoExp[14] = 16384;
+        let twoExp[15] = 16384 + 16384;
+
+        do Output.initMap();
+        return;
     }
 
     // Initializes the character map array
@@ -176,28 +207,106 @@ class Output {
     /** Moves the cursor to the j-th column of the i-th row,
      *  and erases the character displayed there. */
     function void moveCursor(int i, int j) {
+        let y = i;
+        let x = j;
+
+        do Output.printChar(32);
+
+        let y = i;
+        let x = j;
+
+        return;
     }
 
     /** Displays the given character at the cursor location,
      *  and advances the cursor one column forward. */
     function void printChar(char c) {
+        var Array map;
+        var int xLoc, yLoc;
+        var int dx, dy;
+
+        let map = Output.getMap(c);
+        let xLoc = x * fontX;
+        let yLoc = y * fontY;
+
+        let dy = 0;
+        while (dy < fontY) {
+            let dx = 0;
+            while (dx < fontX) {
+                if (~(map[dy] & twoExp[dx] = 0)) {
+                    do Screen.drawPixel(xLoc + dx, yLoc + dy);
+                }
+                let dx = dx + 1;
+            }
+            let dy = dy + 1;
+        }
+
+        let x = x + 1;
+        if (x = maxX) {
+            let x = 0;
+            let y = y + 1;
+        }
+        if (y = maxY) {
+            let y = 0;
+        }
+
+        return;
     }
 
     /** displays the given string starting at the cursor location,
      *  and advances the cursor appropriately. */
     function void printString(String s) {
+        var int i, l;
+
+        let i = 0;
+        let l = s.length();
+
+        while (i < l) {
+            do Output.printChar(s.charAt(i));
+            let i = i + 1;
+        }
+
+        return;
     }
 
     /** Displays the given integer starting at the cursor location,
      *  and advances the cursor appropriately. */
     function void printInt(int i) {
+        var String s;
+
+        let s = String.new(10);
+        do s.setInt(i);
+
+        do Output.printString(s);
+
+        return;
     }
 
     /** Advances the cursor to the beginning of the next line. */
     function void println() {
+        let x = 0;
+        let y = y + 1;
+
+        if (y = maxY) {
+            let y = 0;
+        }
+
+        return;
     }
 
     /** Moves the cursor one column back. */
     function void backSpace() {
+       let x = x - 1;
+        if (x < 0) {
+            let x = maxX - 1;
+            let y = y - 1;
+        }
+        if (y < 0) {
+            let y = maxY - 1;
+        }
+
+        do Output.moveCursor(x, y);
+
+        return;
     }
 }
