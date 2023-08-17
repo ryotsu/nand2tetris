@@ -5,13 +5,12 @@ pub fn parse(source: &str) -> Vec<Instruction> {
     let mut ip: u16 = 0;
 
     for instruction in source.lines() {
-        let instruction = instruction.trim().splitn(2, '/').next().unwrap().trim();
+        let instruction = instruction.trim().split('/').next().unwrap().trim();
         if instruction.is_empty() {
             continue;
         };
 
-        if instruction.starts_with('@') {
-            let mnemonic = &instruction[1..];
+        if let Some(mnemonic) = instruction.strip_prefix('@') {
             match mnemonic.parse::<u16>() {
                 Ok(address) => instructions.push(Instruction::A(AInstruction::Literal(address))),
                 Err(_) => instructions.push(Instruction::A(AInstruction::Mnemonic(mnemonic))),
@@ -21,8 +20,8 @@ pub fn parse(source: &str) -> Vec<Instruction> {
             continue;
         };
 
-        if instruction.starts_with('(') {
-            let mnemonic = instruction.trim_start_matches('(').trim_end_matches(')');
+        if let Some(mut mnemonic) = instruction.strip_prefix('(') {
+            mnemonic = mnemonic.trim_end_matches(')');
             instructions.push(Instruction::Label(LabelInstruction {
                 name: mnemonic,
                 ptr: ip,
@@ -32,7 +31,7 @@ pub fn parse(source: &str) -> Vec<Instruction> {
         }
 
         let dest = if instruction.contains('=') {
-            let mnemonic = instruction.split('=').nth(0).unwrap();
+            let mnemonic = instruction.split('=').next().unwrap();
 
             CDestinationInstruction {
                 ram: mnemonic.contains('M'),
@@ -98,7 +97,7 @@ pub fn parse(source: &str) -> Vec<Instruction> {
         let mnemonic = if instruction.contains('=') {
             instruction.split('=').nth(1).unwrap()
         } else if instruction.contains(';') {
-            instruction.split(';').nth(0).unwrap()
+            instruction.split(';').next().unwrap()
         } else {
             instruction
         };

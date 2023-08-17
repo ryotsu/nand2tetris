@@ -1,5 +1,3 @@
-extern crate assembler;
-
 use assembler::config::Config;
 
 fn main() {
