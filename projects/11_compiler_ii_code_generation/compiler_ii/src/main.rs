@@ -1,5 +1,3 @@
-extern crate compiler_ii;
-
 use compiler_ii::config::Config;
 
 fn main() {

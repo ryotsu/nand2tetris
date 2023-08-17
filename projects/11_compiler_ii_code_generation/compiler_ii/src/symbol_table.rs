@@ -97,18 +97,15 @@ impl<'a> SymbolTable<'a> {
         let symbol = self.get_symbol(name);
 
         match symbol {
-            Option::Some(symbol) => Option::Some(symbol.r#type),
-            Option::None => Option::None,
+            Some(symbol) => Some(symbol.r#type),
+            None => None,
         }
     }
 
     pub fn get_index_of(&self, name: &str) -> Option<u16> {
         let symbol = self.get_symbol(name);
 
-        match symbol {
-            Option::Some(symbol) => Option::Some(symbol.index),
-            Option::None => Option::None,
-        }
+        symbol.map(|symbol| symbol.index)
     }
 
     pub fn reset_subroutine_table(&mut self) {

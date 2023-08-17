@@ -33,10 +33,10 @@ impl Scanner {
             let next_character = self
                 .source
                 .get(self.index + 1..=self.index + 1)
-                .unwrap_or_else(|| "")
+                .unwrap_or("")
                 .chars()
                 .next()
-                .unwrap_or_else(|| '\0');
+                .unwrap_or('\0');
 
             if character == '\n' {
                 self.line += 1;

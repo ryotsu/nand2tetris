@@ -588,7 +588,7 @@ impl<'a> Parser<'a> {
                 } else {
                     let kind = self
                         .symbol_table
-                        .get_kind_of(&id)
+                        .get_kind_of(id)
                         .unwrap_or_else(|| panic!("Unresolved variable name {}", id));
 
                     let segment = match kind {

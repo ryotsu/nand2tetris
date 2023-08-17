@@ -1,6 +1,3 @@
-extern crate tempfile;
-extern crate xml_writer;
-
 pub mod config;
 pub mod parser;
 pub mod printer;

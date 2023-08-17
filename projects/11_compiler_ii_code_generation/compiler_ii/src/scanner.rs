@@ -72,19 +72,19 @@ impl Scanner {
     fn current_char(&self) -> char {
         self.source
             .get(self.index..=self.index)
-            .unwrap_or_else(|| "")
+            .unwrap_or("")
             .chars()
             .next()
-            .unwrap_or_else(|| '\0')
+            .unwrap_or('\0')
     }
 
     fn next_char(&self) -> char {
         self.source
             .get(self.index + 1..=self.index + 1)
-            .unwrap_or_else(|| "")
+            .unwrap_or("")
             .chars()
             .next()
-            .unwrap_or_else(|| '\0')
+            .unwrap_or('\0')
     }
 
     fn skip_comments(&mut self) {
