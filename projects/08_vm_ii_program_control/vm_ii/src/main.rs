@@ -1,5 +1,3 @@
-extern crate vm_ii;
-
 use vm_ii::config::Config;
 
 fn main() {

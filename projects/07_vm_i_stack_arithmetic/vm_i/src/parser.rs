@@ -4,7 +4,7 @@ pub fn parse(vm_code: &str) -> Vec<OpCode> {
     let mut opcodes = Vec::new();
 
     for instruction in vm_code.lines() {
-        let instruction = instruction.trim().splitn(2, '/').next().unwrap().trim();
+        let instruction = instruction.trim().split('/').next().unwrap().trim();
         if instruction.is_empty() {
             continue;
         }
